@@ -4,7 +4,6 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <!-- 회원 목록 초기화면에서 매출금액 테이블도 보여주며 회원 검색시 해당 회원 매출금액도 조회 가능한 테이블 생성 -->
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <link rel="stylesheet" href="./css/common.css" />
 <title>JSP Oracle Test</title>
@@ -18,8 +17,7 @@
 	<div class="container">
 		<div class="content">
 			<form action="SelectMember.jsp">
-				<input type="text" name="name"><input type="submit"
-					value="조회"> <input type="submit" value="목록">
+				<input type="text" name="name"><input type="submit"	value="조회"> <input type="submit" value="목록">
 			</form>
 			<table align="center" border="1">
 				<tr>
@@ -87,32 +85,31 @@
 
 				<%
 					}
-				} else if (name != null) {
+				} else if (name != null || name !="") {
 					query = "select * from member_tbl_02 where custname = '" + name + "'";
 					ResultSet result = con.prepareStatement(query).executeQuery();
-
-					while (result.next()) {
-					cnt += 1;
-					custno = result.getInt("CUSTNO");
-					custname = result.getString("CUSTNAME");
-					phone = result.getString("PHONE");
-					address = result.getString("ADDRESS");
-					joindate = result.getDate("JOINDATE");
-					grade = result.getString("GRADE");
-					city = result.getString("CITY");
-
-					switch (grade) {
-						case "A":
-							grade = "VIP";
-							break;
-						case "B":
-							grade = "GOLD";
-							break;
-						default:
-							grade = "SIVER";
-						break;
-					}
-				%>
+					if(result.next()){
+						do{
+							cnt += 1;
+							custno = result.getInt("CUSTNO");
+							custname = result.getString("CUSTNAME");
+							phone = result.getString("PHONE");
+							address = result.getString("ADDRESS");
+							joindate = result.getDate("JOINDATE");
+							grade = result.getString("GRADE");
+							city = result.getString("CITY");
+							switch (grade) {
+								case "A":
+									grade = "VIP";
+									break;
+								case "B":
+									grade = "GOLD";
+									break;
+								default:
+									grade = "SIVER";
+									break;
+							}
+							%>
 				<tr>
 					<td align="center"><%=custno%></td>
 					<td align="center"><%=custname%></td>
@@ -122,6 +119,13 @@
 					<td align="center"><%=grade%></td>
 					<td align="center"><%=city%></td>
 				</tr>
+						<%}while(result.next());
+						
+					}else{
+				%>
+				<tr>
+					<td align="center" colspan="7">조회한 회원이 없습니다.</td>
+				</tr>	
 				<%
 					}
 				}
